@@ -3,7 +3,7 @@
 
 int main(int argc, char* argv[]) {
 
-	Filter filterSobelVertical = importFilter("sobel_vertical");
+	Filter filter_SobelVertical = importFilter("sobel_vertical");
 
 	return 0;
 }
