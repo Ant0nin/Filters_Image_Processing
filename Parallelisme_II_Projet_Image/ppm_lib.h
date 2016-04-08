@@ -1,12 +1,16 @@
+#pragma once
+
 #define RGB_COMPONENT_COLOR 255
 
+typedef unsigned char Uint8;
+
 typedef struct {
-     unsigned char red,green,blue;
+	Uint8 r, g, b;
 } PPMPixel;
 
 typedef struct {
-     int x, y;
-     PPMPixel *data;
+    int h, w;
+    PPMPixel *data;
 } PPMImage;
 
 PPMImage *readPPM(const char *filename);

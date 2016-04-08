@@ -51,7 +51,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
@@ -67,7 +67,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
@@ -78,24 +78,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="filter_image.c" />
+    <ClCompile Include="filter_lib.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="ppm_lib.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="filter_image.h" />
+    <ClInclude Include="filter_lib.h" />
     <ClInclude Include="ppm_lib.h" />
-    <ClInclude Include="soften_high.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="blur_horizontal.txt" />
-    <Text Include="shatter_diagonal.txt" />
-    <Text Include="sharpen.txt" />
-    <Text Include="sobel_horizontal.txt" />
-    <Text Include="softer.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="sobel_vertical.txt" />
+    <None Include="res\filters\blur_horizontal.filter" />
+    <None Include="res\filters\sharpen_medium.filter" />
+    <None Include="res\filters\shatter_diagonal.filter" />
+    <None Include="res\filters\sobel_horizontal.filter" />
+    <None Include="res\filters\sobel_vertical.filter" />
+    <None Include="res\filters\soften_high.filter" />
+    <None Include="res\filters\softer.filter" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

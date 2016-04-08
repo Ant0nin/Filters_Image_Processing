@@ -13,15 +13,18 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Fichiers de ressources\filters">
+      <UniqueIdentifier>{d0bc8a29-0bed-4a22-973e-5cfc6c0effce}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ppm_lib.c">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="main.c">
+    <ClCompile Include="filter_lib.c">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="filter_image.c">
+    <ClCompile Include="main.c">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>
@@ -29,33 +32,31 @@
     <ClInclude Include="ppm_lib.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="filter_image.h">
+    <ClInclude Include="filter_lib.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="soften_high.txt">
-      <Filter>Fichiers de ressources</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="softer.txt">
-      <Filter>Fichiers de ressources</Filter>
-    </Text>
-    <Text Include="sharpen.txt">
-      <Filter>Fichiers de ressources</Filter>
-    </Text>
-    <Text Include="shatter_diagonal.txt">
-      <Filter>Fichiers de ressources</Filter>
-    </Text>
-    <Text Include="blur_horizontal.txt">
-      <Filter>Fichiers de ressources</Filter>
-    </Text>
-    <Text Include="sobel_horizontal.txt">
-      <Filter>Fichiers de ressources</Filter>
-    </Text>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="sobel_vertical.txt">
-      <Filter>Fichiers de ressources</Filter>
+    <None Include="res\filters\blur_horizontal.filter">
+      <Filter>Fichiers de ressources\filters</Filter>
+    </None>
+    <None Include="res\filters\sharpen_medium.filter">
+      <Filter>Fichiers de ressources\filters</Filter>
+    </None>
+    <None Include="res\filters\shatter_diagonal.filter">
+      <Filter>Fichiers de ressources\filters</Filter>
+    </None>
+    <None Include="res\filters\sobel_horizontal.filter">
+      <Filter>Fichiers de ressources\filters</Filter>
+    </None>
+    <None Include="res\filters\sobel_vertical.filter">
+      <Filter>Fichiers de ressources\filters</Filter>
+    </None>
+    <None Include="res\filters\soften_high.filter">
+      <Filter>Fichiers de ressources\filters</Filter>
+    </None>
+    <None Include="res\filters\softer.filter">
+      <Filter>Fichiers de ressources\filters</Filter>
     </None>
   </ItemGroup>
 </Project>
