@@ -22,5 +22,5 @@ typedef enum AccelerationMode {
 } AccelerationMode;
 
 void applyFilter(PPMImage* image, Filter* filter, AccelerationMode accelerationMode);
-Filter importFilter(char* filterName);
+Filter* importFilter(const char* filterName);
 //void deleteFilter(Filter* filter);

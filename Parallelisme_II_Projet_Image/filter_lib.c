@@ -24,7 +24,7 @@ void applyFilter(PPMImage * image, Filter * filter, AccelerationMode acceleratio
 		}*/
 }
 
-Filter importFilter(const char *filterName)
+Filter* importFilter(const char *filterName)
 {
 	FILE* pFile;
 	char buffer[MAX_DIGITS_ALLOWED + 2];
@@ -35,14 +35,14 @@ Filter importFilter(const char *filterName)
 	if (pFile == NULL) 
 		perror("Error opening file");
 
-	Filter filter;
-	filter.name = filterName;
-	filter.w = atoi(fgets(buffer, MAX_DIGITS_ALLOWED, pFile));
-	filter.h = atoi(fgets(buffer, MAX_DIGITS_ALLOWED, pFile));
-	filter.data = (int*)malloc(sizeof(int) * filter.w * filter.h);
+	Filter *filter = (Filter*)malloc(sizeof(Filter));
+	filter->name = filterName;
+	filter->w = atoi(fgets(buffer, MAX_DIGITS_ALLOWED, pFile));
+	filter->h = atoi(fgets(buffer, MAX_DIGITS_ALLOWED, pFile));
+	filter->data = (int*)malloc(sizeof(int) * filter->w * filter->h);
 
-	for (int j = 0; j < filter.h; j++) {
-		for (int i = 0; i < filter.w; i++) {
+	for (int j = 0; j < filter->h; j++) {
+		for (int i = 0; i < filter->w; i++) {
 
 			int k = 0;
 			buffer[k] = fgetc(pFile);
@@ -59,7 +59,7 @@ Filter importFilter(const char *filterName)
 			}
 			buffer[k] = '\0';
 
-			filter.data[i + j*filter.w] = atoi(buffer);
+			filter->data[i + j*filter->w] = atoi(buffer);
 		}
 	}
 

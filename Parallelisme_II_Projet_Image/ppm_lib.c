@@ -6,12 +6,17 @@
 
 #define CREATOR "PARALLELISME2OPENMP"
 
-PPMImage *readPPM(const char *filename)
+PPMImage *importPPM(const char *imageName)
 {
          char buff[16];
          PPMImage *img;
          FILE *fp;
          int c, rgb_comp_color;
+
+		 char filename[64] = PPM_IMAGES_FOLDER_PATH;
+		 strcat(filename, imageName);
+		 strcat(filename, PPM_IMAGES_FILE_EXTEND);
+
          //open PPM file for reading
          fp = fopen(filename, "rb");
          if (!fp) {
