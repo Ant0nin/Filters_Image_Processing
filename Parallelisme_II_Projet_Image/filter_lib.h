@@ -15,12 +15,6 @@ typedef struct Filter {
 	int *data;
 } Filter;
 
-typedef enum AccelerationMode {
-	NONE,
-	OPEN_MP,
-	CUDA
-} AccelerationMode;
-
-void applyFilter(PPMImage* image, Filter* filter, AccelerationMode accelerationMode);
+void applyFilter(PPMImage* image, Filter* filter);
 Filter* importFilter(const char* filterName);
 //void deleteFilter(Filter* filter);

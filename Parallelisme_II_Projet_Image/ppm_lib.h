@@ -16,4 +16,6 @@ typedef struct {
 } PPMImage;
 
 PPMImage *importPPM(const char *imageName);
-void writePPM(const char *filename, PPMImage *img);
+void exportPPM(const char *imageName, PPMImage *img);
+PPMImage* clonePPM(PPMImage *image);
+void freePPM(PPMImage *image);

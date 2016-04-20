@@ -6,6 +6,25 @@
 
 #define CREATOR "PARALLELISME2OPENMP"
 
+PPMImage* clonePPM(PPMImage *image) {
+
+	PPMImage *clone = (PPMImage*)malloc(sizeof(PPMImage));
+	clone->w = image->w;
+	clone->h = image->h;
+
+	int totalSize = clone->w*clone->h;
+	clone->data = (PPMPixel*)malloc(sizeof(PPMPixel)*totalSize);
+	for (int i = 0; i < totalSize; i++)
+		clone->data[i] = image->data[i];
+
+	return clone;
+}
+
+void freePPM(PPMImage *image) {
+	free(image->data);
+	free(image);
+}
+
 PPMImage *importPPM(const char *imageName)
 {
          char buff[16];
@@ -88,8 +107,12 @@ PPMImage *importPPM(const char *imageName)
     return img;
 }
 
-void writePPM(const char *filename, PPMImage *img)
+void exportPPM(const char *imageName, PPMImage *img)
 {
+	char filename[64] = PPM_IMAGES_FOLDER_PATH;
+	strcat(filename, imageName);
+	strcat(filename, PPM_IMAGES_FILE_EXTEND);
+
     FILE *fp;
     //open file for output
     fp = fopen(filename, "wb");

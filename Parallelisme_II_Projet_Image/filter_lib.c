@@ -1,27 +1,43 @@
 #include <stdio.h>
 #include "filter_lib.h"
+#include "ppm_lib.h"
 
-void applyFilter(PPMImage * image, Filter * filter, AccelerationMode accelerationMode)
+void applyFilter(PPMImage *image, Filter *filter)
 {
-	/*int x, y, x2, y2, gridCounter;
-	Uint *filter, *final;
+	int halfW = (filter->w - 1) >> 1;
+	int halfH = (filter->h - 1) >> 1;
+	int divisionFactor = 0;
+	PPMPixel total;
 
-	for (y = 0; y <= sizeX; y++) // for each pixel in the image
-		for (x = 0; x <= sizeY; x++)
+	PPMImage *bufferImage = clonePPM(image);
+
+	for (int x = 0; x < filter->w; x++)
+		for (int y = 0; y < filter->h; y++) {
+			divisionFactor += filter->data[x + y*filter->w];
+		}
+
+	for (int x = halfW; x <= (image->w - halfW); x++)
+		for (int y = halfH; y <= (image->h - halfW); y++)
 		{
-			gridCounter = 0; // reset some values
-			final = 0;
-			for (y2 = -2; y2 <= 2; y2++) // and for each pixel around our
-				for (x2 = -2; x2 <= 2; x2++) // "hot pixel"...
-				{ // Add to our running total
-					final += image[x + x2][y + y2] * filter[gridCounter];
-					// Go to the next value on the filter grid
-					gridCounter++;
+			int offsetFilter = 0;
+			total.r = 0; total.g = 0; total.b = 0;
+
+			for (int j = -halfH; j <= halfH; j++) 
+				for (int i = -halfW; i <= halfW; i++)
+				{
+					int offsetImage = (x + image->w * y) + (i + image->w * j);
+					total.r += bufferImage->data[offsetImage].r * filter->data[offsetFilter];
+					total.g += bufferImage->data[offsetImage].g * filter->data[offsetFilter];
+					total.b += bufferImage->data[offsetImage].b * filter->data[offsetFilter];
+					offsetFilter++;
 				}
-			// and put it back into the right range
-			final /= divisionFactor;
-			destination[x][y] = final;
-		}*/
+			total.r /= divisionFactor;
+			total.g /= divisionFactor;
+			total.b /= divisionFactor;
+			image->data[x + image->w * y] = total;
+		}
+	
+	freePPM(bufferImage);
 }
 
 Filter* importFilter(const char *filterName)
