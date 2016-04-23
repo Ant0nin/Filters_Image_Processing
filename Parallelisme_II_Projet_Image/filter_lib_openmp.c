@@ -10,13 +10,16 @@ void applyFilter(PPMImage *image, Filter *filter)
 	int tempPixel[3]; // RGB
 
 	PPMImage *bufferImage = clonePPM(image);
+	int x, y, i, j;
 
-	for (int y = 0; y < filter->h; y++) {
+	#pragma omp parallel for shared(divisionFactor)
+	for (y = 0; y < filter->h; y++) {
 		for (int x = 0; x < filter->w; x++)
 			divisionFactor += filter->data[x + y*filter->w];
 		}
 
-	for (int y = halfH; y < (image->h - halfW); y++)
+	#pragma omp parallel for shared(image)
+	for (y = halfH; y < (image->h - halfW); y++)
 		for (int x = halfW; x < (image->w - halfW); x++)
 		{
 			int offsetFilter = 0;
@@ -24,13 +27,15 @@ void applyFilter(PPMImage *image, Filter *filter)
 			tempPixel[1] = 0;
 			tempPixel[2] = 0;
 
-			for (int j = -halfH; j <= halfH; j++) 
-				for (int i = -halfW; i <= halfW; i++)
+			for (j = -halfH; j <= halfH; j++) 
+				for (i = -halfW; i <= halfW; i++)
 				{
 					int offsetImage = (x + image->w * y) + (i + image->w * j);
+
 					tempPixel[0] += bufferImage->data[offsetImage].r * filter->data[offsetFilter]; // R
 					tempPixel[1] += bufferImage->data[offsetImage].g * filter->data[offsetFilter]; // G
 					tempPixel[2] += bufferImage->data[offsetImage].b * filter->data[offsetFilter]; // B
+
 					offsetFilter++;
 				}
 			tempPixel[0] /= divisionFactor;
@@ -42,6 +47,7 @@ void applyFilter(PPMImage *image, Filter *filter)
 			total.g = tempPixel[1];
 			total.b = tempPixel[2];
 
+			#pragma omp critical
 			image->data[x + image->w * y] = total;
 		}
 	
@@ -59,7 +65,7 @@ Filter* importFilter(const char *filterName)
 	if (pFile == NULL) 
 		perror("Error opening file");
 
-	Filter *filter = (Filter*)malloc(sizeof(Filter));
+	Filter *filter = (Filter *)malloc(sizeof(Filter));
 	filter->name = filterName;
 	filter->w = atoi(fgets(buffer, MAX_DIGITS_ALLOWED, pFile));
 	filter->h = atoi(fgets(buffer, MAX_DIGITS_ALLOWED, pFile));

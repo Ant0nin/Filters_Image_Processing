@@ -8,7 +8,7 @@
 
 typedef unsigned int Uint32;
 
-typedef struct Filter {
+typedef struct {
 	char* name;
 	Uint32 w;
 	Uint32 h;
