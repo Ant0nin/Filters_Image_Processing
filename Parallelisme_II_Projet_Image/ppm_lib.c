@@ -8,7 +8,7 @@
 
 PPMImage* clonePPM(PPMImage *image) {
 
-	PPMImage *clone = (PPMImage*)malloc(sizeof(PPMImage));
+	PPMImage *clone = (PPMImage *)malloc(sizeof(PPMImage));
 	clone->w = image->w;
 	clone->h = image->h;
 

@@ -10,11 +10,10 @@ typedef unsigned int Uint32;
 
 typedef struct {
 	char* name;
-	Uint32 w;
-	Uint32 h;
+	Uint32 w, h;
 	int *data;
-} Filter;
+} PPMFilter;
 
-void applyFilter(PPMImage* image, Filter* filter);
-Filter* importFilter(const char* filterName);
+void applyFilter(PPMImage* image, PPMFilter* filter);
+PPMFilter* importFilter(const char* filterName);
 //void deleteFilter(Filter* filter);

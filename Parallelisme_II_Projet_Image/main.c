@@ -4,7 +4,7 @@
 int main(int argc, char* argv[]) {
 
 	PPMImage* image_Baboon = importPPM("Baboon.512");
-	Filter* filter_SobelVertical = importFilter("softer");
+	PPMFilter* filter_SobelVertical = importFilter("softer");
 
 	applyFilter(image_Baboon, filter_SobelVertical);
 

@@ -1,10 +1,11 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "filter_lib.h"
 #include "ppm_lib.h"
 
 #include <cuda_runtime.h>
 
-void applyFilter(PPMImage *image, Filter *filter)
+void applyFilter(PPMImage *image, PPMFilter *filter)
 {
 	const int halfW = (filter->w - 1) >> 1;
 	const int halfH = (filter->h - 1) >> 1;
@@ -50,7 +51,7 @@ void applyFilter(PPMImage *image, Filter *filter)
 	freePPM(bufferImage);
 }
 
-Filter* importFilter(const char *filterName)
+PPMFilter* importFilter(const char *filterName)
 {
 	FILE* pFile;
 	char buffer[MAX_DIGITS_ALLOWED + 2];
@@ -61,7 +62,7 @@ Filter* importFilter(const char *filterName)
 	if (pFile == NULL) 
 		perror("Error opening file");
 
-	Filter *filter = (Filter *)malloc(sizeof(Filter));
+	PPMFilter *filter = (PPMFilter *)malloc(sizeof(PPMFilter));
 	filter->name = filterName;
 	filter->w = atoi(fgets(buffer, MAX_DIGITS_ALLOWED, pFile));
 	filter->h = atoi(fgets(buffer, MAX_DIGITS_ALLOWED, pFile));
