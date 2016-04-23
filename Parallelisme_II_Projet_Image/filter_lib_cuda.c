@@ -61,7 +61,7 @@ Filter* importFilter(const char *filterName)
 	if (pFile == NULL) 
 		perror("Error opening file");
 
-	Filter *filter = (Filter*)malloc(sizeof(Filter));
+	Filter *filter = (Filter *)malloc(sizeof(Filter));
 	filter->name = filterName;
 	filter->w = atoi(fgets(buffer, MAX_DIGITS_ALLOWED, pFile));
 	filter->h = atoi(fgets(buffer, MAX_DIGITS_ALLOWED, pFile));
