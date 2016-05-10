@@ -3,7 +3,7 @@ extern "C" {
 #include "ppm_lib.h"
 }
 
-#define BLOCK_WIDTH 32
+#define BLOCK_DIM 32
 
 __global__ void kernelFilterConvolution(const PPMImage *inputImage, const PPMFilter *filter, PPMPixel *outputImageData)
 {
@@ -12,8 +12,8 @@ __global__ void kernelFilterConvolution(const PPMImage *inputImage, const PPMFil
 	const int filterWidth = filter->w;
 	const int filterHeight = filter->h;
 
-	int pixelCoordX = blockIdx.y * blockDim.y + threadIdx.y;
-	int pixelCoordY = blockIdx.x * blockDim.x + threadIdx.x;
+	int pixelCoordX = blockIdx.x * blockDim.x + threadIdx.x;
+	int pixelCoordY = blockIdx.y * blockDim.y + threadIdx.y;
 
 	if((pixelCoordX >= imageWidth) || (pixelCoordY >= imageHeight))
 		return;
@@ -64,13 +64,13 @@ extern "C"
 void applyFilter(PPMImage *image, PPMFilter *filter)
 {
 	dim3 gridDim;
-	gridDim.x = (int)((float)image->w / (float)BLOCK_WIDTH);
-	gridDim.y = (int)((float)image->h / (float)BLOCK_WIDTH);
+	gridDim.x = (int)((float)image->w / (float)BLOCK_DIM) + 1;
+	gridDim.y = (int)((float)image->h / (float)BLOCK_DIM) + 1;
 	gridDim.z = 1;
 
 	dim3 blockDim;
-	blockDim.x = BLOCK_WIDTH;
-	blockDim.y = BLOCK_WIDTH;
+	blockDim.x = BLOCK_DIM;
+	blockDim.y = BLOCK_DIM;
 	blockDim.z = 1;
 
 	PPMImage *deviceInputImage;
@@ -85,32 +85,30 @@ void applyFilter(PPMImage *image, PPMFilter *filter)
 	int imageDataSize = image->w*image->h*sizeof(PPMPixel);
 	int filterDataSize = filter->w*filter->h*sizeof(int);
 	
-	cudaError_t check;
-
-	check = cudaMalloc(&deviceInputImageData, imageDataSize);
-	check = cudaMemcpy(deviceInputImageData, image->data, imageDataSize, cudaMemcpyHostToDevice);
-	check = cudaMalloc(&deviceInputImage, sizeof(PPMImage));
+	cudaMalloc(&deviceInputImageData, imageDataSize);
+	cudaMemcpy(deviceInputImageData, image->data, imageDataSize, cudaMemcpyHostToDevice);
+	cudaMalloc(&deviceInputImage, sizeof(PPMImage));
 	image->data = deviceInputImageData;
-	check = cudaMemcpy(deviceInputImage, image, sizeof(PPMImage), cudaMemcpyHostToDevice);
+	cudaMemcpy(deviceInputImage, image, sizeof(PPMImage), cudaMemcpyHostToDevice);
 	
-	check = cudaMalloc(&deviceFilterData, filterDataSize);
-	check = cudaMemcpy(deviceFilterData, filter->data, filterDataSize, cudaMemcpyHostToDevice);
-	check = cudaMalloc(&deviceFilter, sizeof(PPMFilter));
+	cudaMalloc(&deviceFilterData, filterDataSize);
+	cudaMemcpy(deviceFilterData, filter->data, filterDataSize, cudaMemcpyHostToDevice);
+	cudaMalloc(&deviceFilter, sizeof(PPMFilter));
 	filter->data = deviceFilterData;
-	check = cudaMemcpy(deviceFilter, filter, sizeof(PPMFilter), cudaMemcpyHostToDevice);
+	cudaMemcpy(deviceFilter, filter, sizeof(PPMFilter), cudaMemcpyHostToDevice);
 	filter->data = originalFilterDataPtr;
 
-	check = cudaMalloc(&deviceOutputImageData, imageDataSize);
+	cudaMalloc(&deviceOutputImageData, imageDataSize);
 
 	kernelFilterConvolution <<<gridDim, blockDim >>> (deviceInputImage, deviceFilter, deviceOutputImageData);
 	cudaDeviceSynchronize();
 
 	image->data = originalImageDataPtr;
-	check = cudaMemcpy(image->data, deviceOutputImageData, imageDataSize, cudaMemcpyDeviceToHost);
+	cudaMemcpy(image->data, deviceOutputImageData, imageDataSize, cudaMemcpyDeviceToHost);
 
-	check = cudaFree(deviceInputImageData);
-	check = cudaFree(deviceInputImage);
-	check = cudaFree(deviceFilterData);
-	check = cudaFree(deviceFilter);
-	check = cudaFree(deviceOutputImageData);
+	cudaFree(deviceInputImageData);
+	cudaFree(deviceInputImage);
+	cudaFree(deviceFilterData);
+	cudaFree(deviceFilter);
+	cudaFree(deviceOutputImageData);
 }
