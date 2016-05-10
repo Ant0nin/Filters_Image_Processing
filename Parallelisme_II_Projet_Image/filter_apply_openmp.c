@@ -8,7 +8,7 @@ void applyFilter(PPMImage *image, PPMFilter *filter)
 	const int halfW = (filter->w - 1) >> 1;
 	const int halfH = (filter->h - 1) >> 1;
 	int divisionFactor = 0;
-	int tempPixel[3]; // RGB
+	Uint32 tempPixel[3]; // RGB
 
 	PPMImage *bufferImage = clonePPM(image);
 	int x, y, i, j;
@@ -19,7 +19,9 @@ void applyFilter(PPMImage *image, PPMFilter *filter)
 			divisionFactor += filter->data[x + y*filter->w];
 		}
 
-	#pragma omp parallel for shared(image)
+	int higherSize = image->w > image->h ? image->w : image->h;
+
+	#pragma omp parallel for schedule(static, higherSize) shared(image)
 	for (y = halfH; y < (image->h - halfW); y++)
 		for (int x = halfW; x < (image->w - halfW); x++)
 		{
@@ -48,53 +50,8 @@ void applyFilter(PPMImage *image, PPMFilter *filter)
 			total.g = tempPixel[1];
 			total.b = tempPixel[2];
 
-			#pragma omp critical
 			image->data[x + image->w * y] = total;
 		}
 	
 	freePPM(bufferImage);
-}
-
-PPMFilter* importFilter(const char *filterName)
-{
-	FILE* pFile;
-	char buffer[MAX_DIGITS_ALLOWED + 2];
-	char path[64] = FILTERS_FOLDER_PATH;
-	strcat(path, filterName);
-	strcat(path, FILTERS_FILE_EXTEND);
-	pFile = fopen(path, "r");
-	if (pFile == NULL) 
-		perror("Error opening file");
-
-	PPMFilter *filter = (PPMFilter *)malloc(sizeof(PPMFilter));
-	filter->name = filterName;
-	filter->w = atoi(fgets(buffer, MAX_DIGITS_ALLOWED, pFile));
-	filter->h = atoi(fgets(buffer, MAX_DIGITS_ALLOWED, pFile));
-	filter->data = (int*)malloc(sizeof(int) * filter->w * filter->h);
-
-	for (int j = 0; j < filter->h; j++) {
-		for (int i = 0; i < filter->w; i++) {
-
-			int k = 0;
-			buffer[k] = fgetc(pFile);
-			k++;
-
-			while (1) {
-				char c = fgetc(pFile);
-
-				if (c == ' ' || c == '\n')
-					break;
-				else
-					buffer[k] = c;
-				k++;
-			}
-			buffer[k] = '\0';
-
-			filter->data[i + j*filter->w] = atoi(buffer);
-		}
-	}
-
-	fclose(pFile);
-
-	return filter;
 }
