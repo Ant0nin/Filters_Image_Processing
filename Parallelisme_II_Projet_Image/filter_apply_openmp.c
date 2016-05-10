@@ -22,7 +22,7 @@ void applyFilter(PPMImage *image, PPMFilter *filter)
 	int higherSize = image->w > image->h ? image->w : image->h;
 
 	#pragma omp parallel for schedule(static, higherSize) shared(image)
-	for (y = halfH; y < (image->h - halfW); y++)
+	for (y = halfH; y < (image->h - halfW); y++) {
 		for (int x = halfW; x < (image->w - halfW); x++)
 		{
 			int offsetFilter = 0;
@@ -30,7 +30,7 @@ void applyFilter(PPMImage *image, PPMFilter *filter)
 			tempPixel[1] = 0;
 			tempPixel[2] = 0;
 
-			for (j = -halfH; j <= halfH; j++) 
+			for (j = -halfH; j <= halfH; j++)
 				for (i = -halfW; i <= halfW; i++)
 				{
 					int offsetImage = (x + image->w * y) + (i + image->w * j);
@@ -52,6 +52,7 @@ void applyFilter(PPMImage *image, PPMFilter *filter)
 
 			image->data[x + image->w * y] = total;
 		}
+	}
 	
 	freePPM(bufferImage);
 }

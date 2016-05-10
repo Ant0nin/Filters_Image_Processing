@@ -14,7 +14,10 @@ PPMImage* clonePPM(PPMImage *image) {
 
 	int totalSize = clone->w*clone->h;
 	clone->data = (PPMPixel*)malloc(sizeof(PPMPixel)*totalSize);
-	for (int i = 0; i < totalSize; i++)
+
+	int i;
+	#pragma omp parallel for shared(image)
+	for (i = 0; i < totalSize; i++)
 		clone->data[i] = image->data[i];
 
 	return clone;

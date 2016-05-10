@@ -6,7 +6,7 @@ int main(int argc, char* argv[]) {
 	const char* inputFilename = "gare_parallelisme2";
 	const char* outputFilename = "_output";
 	const char* filterName = "softer";
-	const Uint32 iterations = 10;
+	const Uint32 iterations = 100;
 
 	PPMImage* image_Baboon = importPPM(inputFilename);
 	PPMFilter* filter_SobelVertical = importFilter(filterName);
