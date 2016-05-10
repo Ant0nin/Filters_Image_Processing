@@ -53,6 +53,7 @@ __global__ void kernelFilterConvolution(const PPMImage *inputImage, const PPMFil
 	}	
 
 	PPMPixel newPixel;
+	if (divisionFactor == 0) divisionFactor = 1;
 	newPixel.r = (Uint8)(sumR / divisionFactor);
 	newPixel.g = (Uint8)(sumG / divisionFactor);
 	newPixel.b = (Uint8)(sumB / divisionFactor);

@@ -13,9 +13,10 @@ void applyFilter(PPMImage *image, PPMFilter *filter)
 	PPMImage *bufferImage = clonePPM(image);
 
 	for (int y = 0; y < filter->h; y++) {
-		for (int x = 0; x < filter->w; x++)
+		for (int x = 0; x < filter->w; x++) {
 			divisionFactor += filter->data[x + y*filter->w];
 		}
+	}
 
 	for (int y = halfH; y < (image->h - halfW); y++)
 		for (int x = halfW; x < (image->w - halfW); x++)
@@ -34,6 +35,8 @@ void applyFilter(PPMImage *image, PPMFilter *filter)
 					tempPixel[2] += bufferImage->data[offsetImage].b * filter->data[offsetFilter]; // B
 					offsetFilter++;
 				}
+
+			if (divisionFactor == 0) divisionFactor = 1;
 			tempPixel[0] /= divisionFactor;
 			tempPixel[1] /= divisionFactor;
 			tempPixel[2] /= divisionFactor;
@@ -47,48 +50,4 @@ void applyFilter(PPMImage *image, PPMFilter *filter)
 		}
 	
 	freePPM(bufferImage);
-}
-
-PPMFilter* importFilter(const char *filterName)
-{
-	FILE* pFile;
-	char buffer[MAX_DIGITS_ALLOWED + 2];
-	char path[64] = FILTERS_FOLDER_PATH;
-	strcat(path, filterName);
-	strcat(path, FILTERS_FILE_EXTEND);
-	pFile = fopen(path, "r");
-	if (pFile == NULL) 
-		perror("Error opening file");
-
-	PPMFilter *filter = (PPMFilter*)malloc(sizeof(PPMFilter));
-	filter->name = filterName;
-	filter->w = atoi(fgets(buffer, MAX_DIGITS_ALLOWED, pFile));
-	filter->h = atoi(fgets(buffer, MAX_DIGITS_ALLOWED, pFile));
-	filter->data = (int*)malloc(sizeof(int) * filter->w * filter->h);
-
-	for (int j = 0; j < filter->h; j++) {
-		for (int i = 0; i < filter->w; i++) {
-
-			int k = 0;
-			buffer[k] = fgetc(pFile);
-			k++;
-
-			while (1) {
-				char c = fgetc(pFile);
-
-				if (c == ' ' || c == '\n')
-					break;
-				else
-					buffer[k] = c;
-				k++;
-			}
-			buffer[k] = '\0';
-
-			filter->data[i + j*filter->w] = atoi(buffer);
-		}
-	}
-
-	fclose(pFile);
-
-	return filter;
 }

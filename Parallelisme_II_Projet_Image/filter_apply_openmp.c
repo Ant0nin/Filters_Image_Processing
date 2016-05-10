@@ -41,14 +41,15 @@ void applyFilter(PPMImage *image, PPMFilter *filter)
 
 					offsetFilter++;
 				}
+			if (divisionFactor == 0) divisionFactor = 1;
 			tempPixel[0] /= divisionFactor;
 			tempPixel[1] /= divisionFactor;
 			tempPixel[2] /= divisionFactor;
 
 			PPMPixel total;
-			total.r = tempPixel[0];
-			total.g = tempPixel[1];
-			total.b = tempPixel[2];
+			total.r = (Uint8)tempPixel[0];
+			total.g = (Uint8)tempPixel[1];
+			total.b = (Uint8)tempPixel[2];
 
 			image->data[x + image->w * y] = total;
 		}
